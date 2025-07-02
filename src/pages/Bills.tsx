@@ -1,61 +1,58 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { Plus, Search, Filter, FileText } from "lucide-react"
-import BillCard from "../components/BillCard"
-import type { Bill } from "../types"
-import { mockBills } from "../data/mockData"
+import { useState, useEffect } from "react";
+import Link from "next/link"; // ✅ Next.js link
+import { Plus, Search, Filter, FileText } from "lucide-react";
+import BillCard from "../components/BillCard";
+import type { Bill } from "../types";
+import { mockBills } from "../data/mockData";
 
 const Bills = () => {
-  const [bills, setBills] = useState<Bill[]>([])
-  const [filteredBills, setFilteredBills] = useState<Bill[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "paid">("all")
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [filteredBills, setFilteredBills] = useState<Bill[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "paid">("all");
 
   useEffect(() => {
-    // Simulate API call
     setTimeout(() => {
-      setBills(mockBills)
-      setFilteredBills(mockBills)
-      setIsLoading(false)
-    }, 500)
-  }, [])
+      setBills(mockBills);
+      setFilteredBills(mockBills);
+      setIsLoading(false);
+    }, 500);
+  }, []);
 
   useEffect(() => {
-    let result = bills
+    let result = bills;
 
-    // Apply search filter
     if (searchTerm) {
       result = result.filter(
         (bill) =>
           bill.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          bill.description?.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
+          bill.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
-    // Apply status filter
     if (statusFilter !== "all") {
-      result = result.filter((bill) => bill.status === statusFilter)
+      result = result.filter((bill) => bill.status === statusFilter);
     }
 
-    setFilteredBills(result)
-  }, [bills, searchTerm, statusFilter])
+    setFilteredBills(result);
+  }, [bills, searchTerm, statusFilter]);
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-neutral-800">Bills</h1>
-        <Link to="/bills/add" className="btn btn-primary">
+        <Link href="/bills/add" className="btn btn-primary">
           <Plus size={18} />
           <span>Add New Bill</span>
         </Link>
@@ -99,7 +96,7 @@ const Bills = () => {
             {searchTerm || statusFilter !== "all" ? "Try adjusting your filters" : "Add your first bill to get started"}
           </p>
           {!searchTerm && statusFilter === "all" && (
-            <Link to="/bills/add" className="btn btn-primary mt-4 inline-flex">
+            <Link href="/bills/add" className="btn btn-primary mt-4 inline-flex">
               <Plus size={18} />
               <span>Add New Bill</span>
             </Link>
@@ -113,7 +110,7 @@ const Bills = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Bills
+export default Bills;
