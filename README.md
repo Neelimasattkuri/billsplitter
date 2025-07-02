@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # billsplitter
 =======
 # GasBill Splitter - Full Stack Application
@@ -223,3 +224,9 @@ To get started:
 
 The application will be available at `http://localhost:5173` with the API running on `http://localhost:5000`.
 >>>>>>> 232b0fa (bill splitter)
+=======
+# billsplitter
+# Bill Splitter
+
+A web app to split monthly gas bills among housemates.
+>>>>>>> 8a73ebdce5abedffdfb32e9560ca45b581b6b6e7
