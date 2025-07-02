@@ -1,46 +1,42 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useParams, useNavigate, Link } from "react-router-dom"
-import { format } from "date-fns"
-import { Edit, Trash2, Download, ArrowLeft } from "lucide-react"
-import UserShareChart from "../components/UserShareChart"
-import ConfirmDialog from "../components/ConfirmDialog"
-import type { Bill } from "../types"
-import { mockBills } from "../data/mockData"
-import { generatePDF } from "../utils/pdfGenerator"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { format } from "date-fns";
+import { Edit, Trash2, Download, ArrowLeft } from "lucide-react";
+import UserShareChart from "../components/UserShareChart";
+import ConfirmDialog from "../components/ConfirmDialog";
+import type { Bill } from "../types";
+import { mockBills } from "../data/mockData";
+import { generatePDF } from "../utils/pdfGenerator";
 
 const BillDetails = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const [bill, setBill] = useState<Bill | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const router = useRouter();
+  const { id } = router.query;
+  const [bill, setBill] = useState<Bill | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const foundBill = mockBills.find((b) => b.id === id)
-      setBill(foundBill || null)
-      setIsLoading(false)
-    }, 500)
-  }, [id])
+    if (!id) return;
+
+    const foundBill = mockBills.find((b) => b.id === id);
+    setBill(foundBill || null);
+    setIsLoading(false);
+  }, [id]);
 
   const handleDelete = () => {
-    // In a real app, you would send a delete request to your API
-    console.log("Deleting bill:", id)
-
-    // Navigate back to bills page
-    navigate("/bills")
-  }
+    console.log("Deleting bill:", id);
+    router.push("/bills");
+  };
 
   const handleExportPDF = () => {
     if (bill) {
-      generatePDF(bill)
+      generatePDF(bill);
     }
-  }
+  };
 
-  // Data for user share chart
   const userShareData =
     bill?.users.map((user, index) => {
       const colors = [
@@ -48,24 +44,23 @@ const BillDetails = () => {
         "rgba(20, 184, 166, 0.7)",
         "rgba(217, 70, 239, 0.7)",
         "rgba(245, 158, 11, 0.7)",
-      ]
+      ];
 
-      // In a real app, you would calculate the actual share for each user
-      const amount = bill.amount / bill.users.length
+      const amount = bill.amount / bill.users.length;
 
       return {
         name: user.name,
         amount,
         color: colors[index % colors.length],
-      }
-    }) || []
+      };
+    }) || [];
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
-    )
+    );
   }
 
   if (!bill) {
@@ -73,20 +68,20 @@ const BillDetails = () => {
       <div className="text-center py-12">
         <h3 className="text-lg font-medium text-neutral-800">Bill not found</h3>
         <p className="text-neutral-500 mt-1">The bill you're looking for doesn't exist or has been removed.</p>
-        <button onClick={() => navigate("/bills")} className="btn btn-primary mt-4">
+        <button onClick={() => router.push("/bills")} className="btn btn-primary mt-4">
           Back to Bills
         </button>
       </div>
-    )
+    );
   }
 
-  const isPaid = bill.status === "paid"
-  const isOverdue = !isPaid && new Date(bill.dueDate) < new Date()
+  const isPaid = bill.status === "paid";
+  const isOverdue = !isPaid && new Date(bill.dueDate) < new Date();
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <Link to="/bills" className="inline-flex items-center text-neutral-600 hover:text-neutral-800">
+        <Link href="/bills" className="inline-flex items-center text-neutral-600 hover:text-neutral-800">
           <ArrowLeft size={16} className="mr-1" />
           <span>Back to Bills</span>
         </Link>
@@ -103,7 +98,7 @@ const BillDetails = () => {
             <Download size={18} />
             <span className="hidden sm:inline ml-1">Export</span>
           </button>
-          <Link to={`/bills/${id}/edit`} className="btn btn-secondary" aria-label="Edit bill">
+          <Link href={`/bills/${id}/edit`} className="btn btn-secondary" aria-label="Edit bill">
             <Edit size={18} />
             <span className="hidden sm:inline ml-1">Edit</span>
           </Link>
@@ -184,7 +179,7 @@ const BillDetails = () => {
         variant="danger"
       />
     </div>
-  )
-}
+  );
+};
 
-export default BillDetails
+export default BillDetails;
