@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useNavigate } from "react-router-dom"
-import BillForm from "../components/BillForm"
-import type { Bill } from "../types"
-import { mockUsers } from "../data/mockData"
+import { useRouter } from "next/router";
+import BillForm from "../components/BillForm";
+import type { Bill } from "../types";
+import { mockUsers } from "../data/mockData";
 
 const AddBill = () => {
-  const navigate = useNavigate()
+  const router = useRouter();
 
   const handleSubmit = (data: Omit<Bill, "id">) => {
     // In a real app, you would send this data to your API
-    console.log("Creating new bill:", data)
+    console.log("Creating new bill:", data);
 
     // Navigate back to bills page
-    navigate("/bills")
-  }
+    router.push("/bills");
+  };
 
   const handleCancel = () => {
-    navigate("/bills")
-  }
+    router.push("/bills");
+  };
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -28,7 +28,7 @@ const AddBill = () => {
         <BillForm users={mockUsers} onSubmit={handleSubmit} onCancel={handleCancel} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddBill
+export default AddBill;
